@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fale Conosco - Neopress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Fale Conosco via WhatsApp</h1>
+        <p class="text-gray-600 text-center mb-6">Envie sua mensagem diretamente para a Neopress!</p>
+
+        <div class="mb-4">
+            <label for="clientName" class="block text-gray-700 text-sm font-medium mb-2">Seu Nome:</label>
+            <input type="text" id="clientName" class="shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Ex: João Silva">
+        </div>
+
+        <div class="mb-4">
+            <label for="clientCity" class="block text-gray-700 text-sm font-medium mb-2">Sua Cidade:</label>
+            <input type="text" id="clientCity" class="shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Ex: Ribeirão Preto">
+        </div>
+
+        <div class="mb-6">
+            <label for="clientMessage" class="block text-gray-700 text-sm font-medium mb-2">Sua Mensagem:</label>
+            <textarea id="clientMessage" rows="8" class="shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-y" placeholder="Digite sua dúvida, solicitação ou orçamento aqui..."></textarea>
+        </div>
+
+        <button id="sendToNeopressWhatsapp" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105">
+            Enviar para Neopress via WhatsApp
+        </button>
+
+        <div id="statusMessage" class="mt-4 text-center text-sm text-gray-600 hidden"></div>
+    </div>
+
+    <script>
+        // Define o número de WhatsApp da Neopress (fixo)
+        const NEOPRESS_WHATSAPP_NUMBER = '5516993115819'; // Seu número de WhatsApp
+
+        // Adiciona um listener para o clique no botão "Enviar para Neopress via WhatsApp"
+        document.getElementById('sendToNeopressWhatsapp').addEventListener('click', function() {
+            const clientNameInput = document.getElementById('clientName');
+            const clientCityInput = document.getElementById('clientCity');
+            const clientMessageInput = document.getElementById('clientMessage');
+            const statusMessage = document.getElementById('statusMessage');
+
+            const name = clientNameInput.value.trim();
+            const city = clientCityInput.value.trim();
+            const message = clientMessageInput.value.trim();
+
+            // Validação básica dos campos
+            if (!name || !message) { // Cidade pode ser opcional, mas nome e mensagem são obrigatórios
+                statusMessage.textContent = 'Por favor, preencha seu nome e sua mensagem antes de enviar.';
+                statusMessage.classList.remove('hidden', 'text-gray-600');
+                statusMessage.classList.add('text-red-600');
+                return;
+            }
+
+            // Constrói a mensagem completa com nome e cidade
+            let fullMessage = `Nome: ${name}`;
+            if (city) { // Adiciona a cidade se ela for preenchida
+                fullMessage += `\nCidade: ${city}`;
+            }
+            fullMessage += `\nMensagem: ${message}`;
+
+            // Constrói a URL do WhatsApp com o número da Neopress e a mensagem completa
+            const whatsappUrl = `https://wa.me/${NEOPRESS_WHATSAPP_NUMBER}?text=${encodeURIComponent(fullMessage)}`;
+
+            // Abre o WhatsApp em uma nova aba
+            window.open(whatsappUrl, '_blank');
+
+            // Exibe mensagem de status
+            statusMessage.textContent = 'Abrindo WhatsApp para enviar sua mensagem...';
+            statusMessage.classList.remove('hidden', 'text-red-600');
+            statusMessage.classList.add('text-gray-600');
+
+            // Limpa os campos após o "envio" (abertura do WhatsApp)
+            clientNameInput.value = '';
+            clientCityInput.value = '';
+            clientMessageInput.value = '';
+        });
+    </script>
+</body>
+</html>
